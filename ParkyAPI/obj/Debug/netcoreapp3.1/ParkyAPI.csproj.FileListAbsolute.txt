@@ -50,5 +50,4 @@ C:\Users\muma\Documents\courses\udemyCourses\ASP.NETcoreRestfulAPI\Parky\ParkyAP
 C:\Users\muma\Documents\courses\udemyCourses\ASP.NETcoreRestfulAPI\Parky\ParkyAPI\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Runtime.Caching.dll
 C:\Users\muma\Documents\courses\udemyCourses\ASP.NETcoreRestfulAPI\Parky\ParkyAPI\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\muma\Documents\courses\udemyCourses\ASP.NETcoreRestfulAPI\Parky\ParkyAPI\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.Design.dll
-C:\Users\muma\Documents\courses\udemyCourses\ASP.NETcoreRestfulAPI\Parky\ParkyAPI\obj\Debug\netcoreapp3.1\ParkyAPI.csproj.CoreCompileInputs.cache
-C:\Users\muma\Documents\courses\udemyCourses\ASP.NETcoreRestfulAPI\Parky\ParkyAPI\obj\Debug\netcoreapp3.1\ParkyAPI.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\muma\Documents\courses\udemyCourses\ASP.NETcoreRestfulAPI\Parky\ParkyAPI\bin\Debug\netcoreapp3.1\AutoMapper.dll
