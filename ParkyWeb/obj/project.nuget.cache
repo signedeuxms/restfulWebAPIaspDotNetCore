@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "bydjZqgftEoEKIV2tp3Y1oZIj4TeNZt9EIJ905xiqacDBtUc9kCM99wqntylG0m/rDsh2id2e9/w+x0XgK4WZg==",
+  "dgSpecHash": "8X3oTk/Q2ROF4Xa/enjmUdgRX3+Whsq9P89W585mt4iRcrIvNVk5MtPdZCAPyWjGc58O109LFSmoLdOiJQWarA==",
   "success": true,
   "projectFilePath": "C:\\Users\\muma\\Documents\\courses\\udemyCourses\\ASP.NETcoreRestfulAPI\\Parky\\ParkyWeb\\ParkyWeb.csproj",
   "expectedPackageFiles": [
@@ -13,6 +13,7 @@
     "C:\\Users\\muma\\.nuget\\packages\\microsoft.codeanalysis.razor\\3.1.4\\microsoft.codeanalysis.razor.3.1.4.nupkg.sha512",
     "C:\\Users\\muma\\.nuget\\packages\\microsoft.extensions.dependencymodel\\3.1.4\\microsoft.extensions.dependencymodel.3.1.4.nupkg.sha512",
     "C:\\Users\\muma\\.nuget\\packages\\microsoft.netcore.platforms\\2.1.2\\microsoft.netcore.platforms.2.1.2.nupkg.sha512",
+    "C:\\Users\\muma\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
     "C:\\Users\\muma\\.nuget\\packages\\system.collections.immutable\\1.5.0\\system.collections.immutable.1.5.0.nupkg.sha512",
     "C:\\Users\\muma\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512",
     "C:\\Users\\muma\\.nuget\\packages\\system.reflection.metadata\\1.6.0\\system.reflection.metadata.1.6.0.nupkg.sha512",
