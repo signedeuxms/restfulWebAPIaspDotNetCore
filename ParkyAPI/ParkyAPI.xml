@@ -4,7 +4,7 @@
         <name>ParkyAPI</name>
     </assembly>
     <members>
-        <member name="M:ParkyAPI.Controllers.NationalParksController.GetNationalPaks">
+        <member name="M:ParkyAPI.Controllers.NationalParksController.GetNationalParks">
             <summary>
             Get list of national parks.
             </summary>
@@ -15,6 +15,19 @@
             Get individual national park.
             </summary>
             <param name="nationalParkID"> The Id of the national park. </param>
+            <returns></returns>
+        </member>
+        <member name="M:ParkyAPI.Controllers.TrailsController.GetTrails">
+            <summary>
+            Get list of trails.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ParkyAPI.Controllers.TrailsController.GetTrail(System.Int32)">
+            <summary>
+            Get individual trail.
+            </summary>
+            <param name="trailID"> The Id of the trail. </param>
             <returns></returns>
         </member>
         <member name="M:ParkyAPI.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">

@@ -40,17 +40,49 @@ namespace ParkyAPI
                      "DefaultConnection")));
 
             services.AddScoped<INationalParkRepository, NationalParkRepository>();
+            services.AddScoped<ITrailRepository, TrailRepository>();
             services.AddAutoMapper(typeof(ParkyMappings));
 
             // https://localhost:44315/swagger/ParkyOpenAPIspec/swagger.json
             // open API to get available data
             services.AddSwaggerGen( options => {
-                options.SwaggerDoc("ParkyOpenAPIspec",
+                options.SwaggerDoc("ParkyOpenAPIspecNationalPark",
                 new Microsoft.OpenApi.Models.OpenApiInfo()
                 {
-                    Title = "Parky API",
-                    Version = "1"
+                    Title = "Parky API (National Park)",
+                    Version = "1",
+                    Description = "List of some national park to discover",
+                    Contact = new Microsoft.OpenApi.Models.OpenApiContact()
+                    {
+                        Email = "godgoodness@yahoo.com",
+                        Name = "God Goodness",
+                        Url = new Uri("https://www.bhurgen.com")
+                    },
+                    License = new Microsoft.OpenApi.Models.OpenApiLicense()
+                    {
+                        Name = "MIT License",
+                        Url = new Uri("https://en.wikipedia.org/wiki/MIT_License")
+                    }
                 });
+
+               options.SwaggerDoc("ParkyOpenAPIspecTrail",
+               new Microsoft.OpenApi.Models.OpenApiInfo()
+               {
+                   Title = "Parky API (Trail)",
+                   Version = "1",
+                   Description = "List of some trails to join to.",
+                   Contact = new Microsoft.OpenApi.Models.OpenApiContact()
+                   {
+                       Email = "godgoodness@yahoo.com",
+                       Name = "God Goodness",
+                       Url = new Uri("https://www.bhurgen.com")
+                   },
+                   License = new Microsoft.OpenApi.Models.OpenApiLicense()
+                   {
+                       Name = "MIT License",
+                       Url = new Uri("https://en.wikipedia.org/wiki/MIT_License")
+                   }
+               });
 
                 var xmlCommentFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var cmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentFile);
@@ -79,8 +111,10 @@ namespace ParkyAPI
             // https://localhost:44315/swagger/index.html
             // https://localhost:44315/index.html
             app.UseSwaggerUI( options => {
-                options.SwaggerEndpoint("/swagger/ParkyOpenAPIspec/swagger.json",
-                                        "Parky API");
+                options.SwaggerEndpoint("/swagger/ParkyOpenAPIspecNationalPark/swagger.json",
+                                        "Parky API National Park");
+                options.SwaggerEndpoint("/swagger/ParkyOpenAPIspecTrail/swagger.json",
+                                        "Parky API Trail");
                 options.RoutePrefix = "";
             });
 
