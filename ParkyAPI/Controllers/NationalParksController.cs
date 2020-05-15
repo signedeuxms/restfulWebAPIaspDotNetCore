@@ -113,7 +113,8 @@ namespace ParkyAPI.Controllers
 
             // return Ok();
             return CreatedAtRoute(nameof(GetNationalPark), 
-                                    new { nationalParkID = park.Id }, park);
+                          new { version = HttpContext.GetRequestedApiVersion().ToString(), 
+                          nationalParkID = park.Id }, park);
         }
 
 

@@ -19,7 +19,7 @@ namespace ParkyAPI.Repository
             this._dbContext = dbContext;
         }
 
-        public ICollection<Trail> GetTrailInNationalPark(int nationalParkID)
+        public ICollection<Trail> GetTrailsInNationalPark(int nationalParkID)
         {
             return this._dbContext.Trails.Include(trail => trail.NationalPark)
                                   .Where(trail => trail.NationalParkId == nationalParkID)

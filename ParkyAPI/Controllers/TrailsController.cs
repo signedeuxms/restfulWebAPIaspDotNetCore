@@ -105,6 +105,52 @@ namespace ParkyAPI.Controllers
         }
 
 
+        /// <summary>
+        /// Get individual trail.
+        /// </summary>
+        /// <param name="nationalParkID"> The Id of the trail. </param>
+        /// <returns></returns>
+        [HttpGet("[action]/{nationalParkID:int}")]
+        [ProducesResponseType(200, Type = typeof(TrailDTO))]
+        [ProducesResponseType(404)]
+        [ProducesDefaultResponseType]
+        public IActionResult GetTrailInNationalPark(int nationalParkID)
+        {
+            var trails = this._trailRepository.GetTrailsInNationalPark(nationalParkID);
+            var trailsDTO = new List<TrailDTO>();
+
+            if (trails == null)
+            {
+                return NotFound();
+            }
+
+            foreach( var trail in trails)
+            {
+                trailsDTO.Add(this._mapper.Map<TrailDTO>(trail));
+                //var trailDTO = this._mapper.Map<TrailDTO>(trail);
+                /*var trailDTO = new TrailDTO()
+                {
+                    Id = trail.Id,
+                    Name = trail.Name,
+                    Distance = trail.Distance,
+                    NationalParkId = trail.NationalParkId,
+                    Difficulty = trail.Difficulty,
+                    NationalParkDTO = new NationalParkDTO
+                    {
+                        Id = trail.NationalPark.Id,
+                        Name = trail.NationalPark.Name,
+                        State = trail.NationalPark.State,
+                        Created = trail.NationalPark.Created,
+                        Established = trail.NationalPark.Established
+                    }
+                };
+                trailsDTO.Add(trailDTO);*/
+            }
+
+            return Ok(trailsDTO);
+        }
+
+
         [HttpPost]
         [ProducesResponseType(201, Type = typeof(TrailDTO))]
         [ProducesResponseType(StatusCodes.Status201Created)]
