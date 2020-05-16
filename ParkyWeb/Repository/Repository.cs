@@ -61,7 +61,7 @@ namespace ParkyWeb.Repository
 
             HttpResponseMessage response = await client.SendAsync(request);
 
-            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<IEnumerable<T>>(jsonString);
@@ -70,7 +70,7 @@ namespace ParkyWeb.Repository
             return null;
         }
 
-        public async Task<IEnumerable<T>> GetAsync(string url, int id)
+        public async Task<T> GetAsync(string url, int id)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url);
 
@@ -81,7 +81,7 @@ namespace ParkyWeb.Repository
             if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<IEnumerable<T>>(jsonString);
+                return JsonConvert.DeserializeObject<T>(jsonString);
             }
 
             return null;
@@ -106,5 +106,22 @@ namespace ParkyWeb.Repository
 
             return response.StatusCode == System.Net.HttpStatusCode.NoContent ? true : false;
         }
+
+        /*Task<T> GetAsync(string url, int id)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+
+            var client = this._clientFactory.CreateClient();
+
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                var jsonString = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<IEnumerable<T>>(jsonString);
+            }
+
+            return null;
+        }*/
     }
 }

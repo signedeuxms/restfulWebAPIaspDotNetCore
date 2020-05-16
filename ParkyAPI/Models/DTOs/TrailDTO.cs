@@ -24,7 +24,5 @@ namespace ParkyAPI.Models.DTOs
         public DifficultyType Difficulty { get; set; }
 
         public NationalParkDTO NationalParkDTO { get; set; }
-
-
     }
 }
