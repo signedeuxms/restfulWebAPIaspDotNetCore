@@ -1,5 +1,6 @@
-﻿var dataTable;
-var allColumn = [];
+﻿//import { Toast } from "../lib/bootstrap/dist/js/bootstrap.bundle";
+
+var dataTable;
 
 $(document).ready(function () {
     loadDataTable();
@@ -7,56 +8,27 @@ $(document).ready(function () {
 
 function loadDataTable() {
     dataTable = $("#tblData").DataTable({
-        //"processing": true,
-        //bserverside": true,
-        //"jquery.support.cors": true,
-        "orderfixed": {
-            "post": [[0, 'asc'], [1, 'asc'], [2, 'asc']]
-        },
         "ajax": {
-            //"processing": true,
-            //"serverSide": true,
             "url": "/nationalParks/GetAllNationalPark",
             "type": "GET",
             "datatype": "json",
-            //"datasrc": "",
-            //var data = table.ajax.params();
-            //"contenttype": "application/json",
-            "success": function (value) {
-                console.log(' \n\n data.length => ' + value.data.length);
-
-                console.log('\n\n ALL \n');
-                for (var i = 0; i < value.data.length; i++) {
-                    var park = value.data[i];
-                    var my_item = {};                   
-                    console.log('\n');
-                    for (const [key, val] of Object.entries(park)) {
-                        console.log(' => ' + key + ": " + val);    
-                        my_item.title = key;
-                        my_item.data = key;
-                    }
-                    allColumn.push(park);
-                }
-            },
-            "error": function (error) {
-                alert('\n error get data => ' + error);
+            "complete": function (data) {
+                console.log(data);
+                console.log(data['responseJSON']);
             }
         },
-        "datasrc": "data",
-        //"paging": true,
-        //"ordering": true,
         "columns": [
             //{ "data": "name", "width": "50%" },
             {
                 "data": "name", // can be null or undefined
                 "width": "50%",
-                "defaultContent": "name=nothing"
+                "defaultContent": "name is undefined/null"
             },
             //{ "data": "state", "width": "20%" },
             {
                 "data": "state", // can be null or undefined
                 "width": "20%",
-                "defaultContent": "state=nothing"
+                "defaultContent": "state is undefined/null"
             },
             {
                 "data": "id",
@@ -64,7 +36,7 @@ function loadDataTable() {
                     console.log('\n\n nationalparks \n\n');
                     console.log(data);
                     return `<div class="text-center">
-                                <a href="/nationalParks/Upsert/${data}" 
+                                <a href="/nationalParks/UpdateInsert/${data}" 
                                     class='btn btn-success text-white'
                                     style='cursor:pointer;'>
                                     <i class='far fa-edit'></i>
@@ -79,11 +51,35 @@ function loadDataTable() {
                             `;
                 },
                 "width": "30%",
-                "defaultContent": "id=nothing"
+                "defaultContent": "data.id is undefined/null"
             },
         ]
-        /*"error": function (error) {
-            console.log('\n\n fail => ', error);
-        }*/
+    });
+}
+
+
+function Delete(url) {
+    swal({
+        title: "Are you sure you want to delete?",
+        text: "You will be able to restore the data!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true
+    }).then((willDelete) => {
+        if (willDelete) {
+            $.ajax({
+                type: 'DELETE',
+                url: url,
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message);
+                        dataTable.ajax.reload();
+                    }
+                    else {
+                        toastr.error(data.message);
+                    }
+                }
+            });
+        }
     });
 }
