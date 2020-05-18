@@ -19,6 +19,9 @@ namespace ParkyAPI.Models
         public double Distance { get; set; }
 
         [Required]
+        public double Elevation { get; set; }
+
+        [Required]
         public int NationalParkId { get; set; }     
 
         [ForeignKey("NationalParkId")]
