@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+// to access the enum DifficultyType
 using static ParkyAPI.Models.Trail;
+using Newtonsoft.Json;
+using System.Runtime.Serialization;
 
 namespace ParkyAPI.Models.DTOs
 {

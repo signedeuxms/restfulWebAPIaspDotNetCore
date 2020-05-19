@@ -46,6 +46,9 @@ namespace ParkyAPI.Repository
 
         public ICollection<Trail> GetTrails()
         {
+            var x = this._dbContext.Trails.Include(trail => trail.NationalPark)
+                                         .OrderBy(trail => trail.Name).ToList();
+
             return this._dbContext.Trails.Include(trail => trail.NationalPark)
                                          .OrderBy(trail => trail.Name).ToList();
         }

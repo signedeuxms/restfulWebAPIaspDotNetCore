@@ -46,8 +46,11 @@ namespace ParkyWeb.Controllers
                 {
                     Text = park.Name,
                     Value = park.Id.ToString()
-                })
+                }),
+                Trail = new Trail()
             };
+
+            //var trailVM = await this.populateNationalParkDropDownm();
 
             if (Id == null)
             {
@@ -77,13 +80,13 @@ namespace ParkyWeb.Controllers
             {
                 if (trailVM.Trail.Id == 0)
                 {
-                    await this._trailRepository.CreateAsync(SDetail.TrialAPIpath,
+                    await this._trailRepository.CreateAsync(SDetail.TrailAPIpath,
                         trailVM.Trail);
                 }
                 else
                 {
                     await this._trailRepository
-                        .UpdateAsync(SDetail.NationalParkAPIpath+ trailVM.Trail.Id,
+                        .UpdateAsync(SDetail.TrailAPIpath + trailVM.Trail.Id,
                                         trailVM.Trail);
                 }
 
@@ -91,30 +94,64 @@ namespace ParkyWeb.Controllers
             }
             else
             {
-                return View(trailVM);
+                IEnumerable<NationalPark> nationalParks = await this._nationalParkRepository
+                                       .GetAllAsync(SDetail.NationalParkAPIpath);
+
+                TrailsVM trailVMa = new TrailsVM()
+                {
+                    NationalParkList = nationalParks.Select(park => new SelectListItem
+                    {
+                        Text = park.Name,
+                        Value = park.Id.ToString()
+                    }),
+                    Trail = trailVM.Trail
+                };
+
+                //var trailVMa = await this.populateNationalParkDropDownm();
+
+                return View(trailVMa);
             }
         }
 
+
+        private async Task<TrailsVM> populateNationalParkDropDownm()
+        {
+            IEnumerable<NationalPark> nationalParks = await this._nationalParkRepository
+                                        .GetAllAsync(SDetail.NationalParkAPIpath);
+
+            TrailsVM trailVM = new TrailsVM()
+            {
+                NationalParkList = nationalParks.Select(park => new SelectListItem
+                {
+                    Text = park.Name,
+                    Value = park.Id.ToString()
+                }),
+                Trail = new Trail()
+            };
+
+            return trailVM;
+        }
 
         [HttpDelete]
         public async Task<IActionResult> Delete(int Id)
         {
             var status = await this._trailRepository
-                                    .DeleteAsync(SDetail.TrialAPIpath, Id);
+                                    .DeleteAsync(SDetail.TrailAPIpath, Id);
 
             if (status)
             {
                 return Json(new { success = true, message = "Delete successful" });
             }
 
-            return Json(new { success = false, message = "Delete successful" });
+            return Json(new { success = false, message = "Delete not successful" });
         }
 
 
-        public async Task<IActionResult> GetAlTrail()
+        public async Task<IActionResult> GetAllTrail()
         {
             return Json( new { data = await this._trailRepository
-                                      .GetAllAsync(SDetail.TrialAPIpath)} );
+                                      .GetAllAsync(SDetail.TrailAPIpath)
+            } );
         }
     }
 }

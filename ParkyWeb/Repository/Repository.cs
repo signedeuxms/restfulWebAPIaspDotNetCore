@@ -27,8 +27,12 @@ namespace ParkyWeb.Repository
             var request = new HttpRequestMessage(HttpMethod.Post, url);
             if(objectToCreate != null)
             {
-                request.Content = new StringContent(JsonConvert
+                /*request.Content = new StringContent(JsonConvert
                     .SerializeObject(objectToCreate),
+                    Encoding.UTF8, "application/json");*/
+
+                request.Content = new StringContent(JsonConvert
+                    .SerializeObject(objectToCreate, Formatting.Indented),
                     Encoding.UTF8, "application/json");
             }
             else 
@@ -50,9 +54,17 @@ namespace ParkyWeb.Repository
 
             HttpResponseMessage response = await client.SendAsync(request);
 
+            /*if(response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return true;
+            }
+
+            return false;*/
+
             return response.StatusCode == System.Net.HttpStatusCode.NoContent? true : false;
         }
 
+        
         public async Task<IEnumerable<T>> GetAllAsync(string url)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -64,6 +76,7 @@ namespace ParkyWeb.Repository
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
+
                 return JsonConvert.DeserializeObject<IEnumerable<T>>(jsonString);
             }
 
@@ -93,8 +106,12 @@ namespace ParkyWeb.Repository
             if (objectToUpdate != null)
             {
                 request.Content = new StringContent(JsonConvert
+                    .SerializeObject(objectToUpdate, Formatting.Indented),
+                    Encoding.UTF8, "application/json");             
+
+                /*request.Content = new StringContent(JsonConvert
                     .SerializeObject(objectToUpdate),
-                    Encoding.UTF8, "application/json");
+                    Encoding.UTF8, "application/json");*/
             }
             else
             {

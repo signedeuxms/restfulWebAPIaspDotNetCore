@@ -42,11 +42,14 @@ namespace ParkyAPI.Controllers
             foreach (var trail in trails)
             {
                 //trailsDTO.Add(this._mapper.Map<TrailDTO>(trail));
+                //TrailDTO userDTO = this._mapper.Map(trail, TrailDTO.class);
+
                 var trailDTO = new TrailDTO()
                 {
                     Id = trail.Id,
                     Name = trail.Name,
                     Distance = trail.Distance,
+                    Elevation = trail.Elevation,
                     NationalParkId = trail.NationalParkId,
                     Difficulty = trail.Difficulty,
                     NationalParkDTO = new NationalParkDTO
@@ -89,6 +92,7 @@ namespace ParkyAPI.Controllers
                 Id = trail.Id,
                 Name = trail.Name,
                 Distance = trail.Distance,
+                Elevation = trail.Elevation,
                 NationalParkId = trail.NationalParkId,
                 Difficulty = trail.Difficulty,
                 NationalParkDTO = new NationalParkDTO
@@ -133,6 +137,7 @@ namespace ParkyAPI.Controllers
                     Id = trail.Id,
                     Name = trail.Name,
                     Distance = trail.Distance,
+                    Elevation = trail.Elevation,
                     NationalParkId = trail.NationalParkId,
                     Difficulty = trail.Difficulty,
                     NationalParkDTO = new NationalParkDTO
