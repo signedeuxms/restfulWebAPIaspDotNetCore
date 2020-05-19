@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -16,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using ParkyAPI.Data;
 using ParkyAPI.Mappers;
 using ParkyAPI.Repository;
@@ -37,12 +40,15 @@ namespace ParkyAPI
         // container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+
             services.AddDbContext<ParkyAPIdbContext>( options => 
                      options.UseSqlServer(Configuration.GetConnectionString(
                      "DefaultConnection")));
 
             services.AddScoped<INationalParkRepository, NationalParkRepository>();
-            services.AddScoped<ITrailRepository, TrailRepository>();
+
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddAutoMapper(typeof(ParkyMappings));
 
@@ -58,6 +64,30 @@ namespace ParkyAPI
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
             services.AddSwaggerGen();
+
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+
+            services.AddAuthentication(auth =>
+           {
+               auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+               auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+           })
+           .AddJwtBearer( bear => {
+               bear.RequireHttpsMetadata = false;
+               bear.SaveToken = true;
+               bear.TokenValidationParameters = new TokenValidationParameters
+               {
+                   ValidateIssuerSigningKey = true,
+                   IssuerSigningKey = new SymmetricSecurityKey(key),
+                   ValidateIssuer = false,
+                   ValidateAudience = false
+               };
+            });
+
             // https://localhost:44315/swagger/ParkyOpenAPIspec/swagger.json
             // open API to get available data
             //services.AddSwaggerGen( options => {
@@ -150,6 +180,12 @@ namespace ParkyAPI
             //});
 
             app.UseRouting();
+
+            // get one entrypoint to the api
+            app.UseCors(cor => cor.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()) ;
+
+            // authentication is always before the authorization
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
