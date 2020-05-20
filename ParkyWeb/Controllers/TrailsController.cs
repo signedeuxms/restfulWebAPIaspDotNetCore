@@ -8,9 +8,12 @@ using ParkyWeb.Models;
 using ParkyWeb.Models.ViewModels;
 using ParkyWeb.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ParkyWeb.Controllers
 {
+    [Authorize]
     public class TrailsController : Controller
     {
         private readonly ITrailRepository _trailRepository;
@@ -35,10 +38,12 @@ namespace ParkyWeb.Controllers
          * UpdateInsert() is used to update and insert a national park.
          * Id: a nullable id
          */
+         [Authorize(Roles ="Admin")]
         public async Task<IActionResult> UpdateInsert(int? Id)
         {
             IEnumerable<NationalPark> nationalParks = await this._nationalParkRepository
-                                        .GetAllAsync(SDetail.NationalParkAPIpath);
+                                        .GetAllAsync(SDetail.NationalParkAPIpath,
+                                        HttpContext.Session.GetString("JWToken"));
 
             TrailsVM trailVM = new TrailsVM()
             {
@@ -61,7 +66,8 @@ namespace ParkyWeb.Controllers
 
             // load the object for update
             trailVM.Trail = await this._trailRepository.GetAsync(
-                                SDetail.NationalParkAPIpath, Id.GetValueOrDefault());
+                                SDetail.TrailAPIpath, Id.GetValueOrDefault(),
+                                HttpContext.Session.GetString("JWToken"));
 
             if (trailVM.Trail == null)
             {
@@ -81,13 +87,13 @@ namespace ParkyWeb.Controllers
                 if (trailVM.Trail.Id == 0)
                 {
                     await this._trailRepository.CreateAsync(SDetail.TrailAPIpath,
-                        trailVM.Trail);
+                        trailVM.Trail, HttpContext.Session.GetString("JWToken"));
                 }
                 else
                 {
                     await this._trailRepository
                         .UpdateAsync(SDetail.TrailAPIpath + trailVM.Trail.Id,
-                                        trailVM.Trail);
+                               trailVM.Trail, HttpContext.Session.GetString("JWToken"));
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -95,7 +101,8 @@ namespace ParkyWeb.Controllers
             else
             {
                 IEnumerable<NationalPark> nationalParks = await this._nationalParkRepository
-                                       .GetAllAsync(SDetail.NationalParkAPIpath);
+                                       .GetAllAsync(SDetail.NationalParkAPIpath,
+                                       HttpContext.Session.GetString("JWToken"));
 
                 TrailsVM trailVMa = new TrailsVM()
                 {
@@ -117,7 +124,8 @@ namespace ParkyWeb.Controllers
         private async Task<TrailsVM> populateNationalParkDropDownm()
         {
             IEnumerable<NationalPark> nationalParks = await this._nationalParkRepository
-                                        .GetAllAsync(SDetail.NationalParkAPIpath);
+                                        .GetAllAsync(SDetail.NationalParkAPIpath,
+                                        HttpContext.Session.GetString("JWToken"));
 
             TrailsVM trailVM = new TrailsVM()
             {
@@ -136,7 +144,8 @@ namespace ParkyWeb.Controllers
         public async Task<IActionResult> Delete(int Id)
         {
             var status = await this._trailRepository
-                                    .DeleteAsync(SDetail.TrailAPIpath, Id);
+                                    .DeleteAsync(SDetail.TrailAPIpath, Id,
+                                    HttpContext.Session.GetString("JWToken"));
 
             if (status)
             {
@@ -150,7 +159,8 @@ namespace ParkyWeb.Controllers
         public async Task<IActionResult> GetAllTrail()
         {
             return Json( new { data = await this._trailRepository
-                                      .GetAllAsync(SDetail.TrailAPIpath)
+                                      .GetAllAsync(SDetail.TrailAPIpath, 
+                                      HttpContext.Session.GetString("JWToken"))
             } );
         }
     }

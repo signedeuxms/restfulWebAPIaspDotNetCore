@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Runtime.InteropServices;
+using System.Net.Http.Headers;
 
 namespace ParkyWeb.Repository
 {
@@ -18,11 +19,11 @@ namespace ParkyWeb.Repository
 
         public Repository(IHttpClientFactory clientFactory)
         {
-            this._clientFactory = clientFactory;                   
+            this._clientFactory = clientFactory; 
         }
 
 
-        public async Task<bool> CreateAsync(string url, T objectToCreate)
+        public async Task<bool> CreateAsync(string url, T objectToCreate, string token = "")
         {
             var request = new HttpRequestMessage(HttpMethod.Post, url);
             if(objectToCreate != null)
@@ -41,16 +42,29 @@ namespace ParkyWeb.Repository
             }
 
             var client = this._clientFactory.CreateClient();
+
+            if(token.Length >= 1)
+            {
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
+            }
+
             HttpResponseMessage response = await client.SendAsync(request);
 
             return response.StatusCode == System.Net.HttpStatusCode.Created? true : false;
         }
 
-        public async Task<bool> DeleteAsync(string url, int id)
+        public async Task<bool> DeleteAsync(string url, int id, string token = "")
         {
             var request = new HttpRequestMessage(HttpMethod.Delete, url+id);
 
             var client = this._clientFactory.CreateClient();
+
+            if (token.Length >= 1)
+            {
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
+            }
 
             HttpResponseMessage response = await client.SendAsync(request);
 
@@ -65,11 +79,17 @@ namespace ParkyWeb.Repository
         }
 
         
-        public async Task<IEnumerable<T>> GetAllAsync(string url)
+        public async Task<IEnumerable<T>> GetAllAsync(string url, string token = "")
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url);
 
             var client = this._clientFactory.CreateClient();
+
+            if (token != null && token.Length >= 1)
+            {
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
+            }
 
             HttpResponseMessage response = await client.SendAsync(request);
 
@@ -83,11 +103,17 @@ namespace ParkyWeb.Repository
             return null;
         }
 
-        public async Task<T> GetAsync(string url, int Id)
+        public async Task<T> GetAsync(string url, int Id, string token = "")
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url+Id);
 
             var client = this._clientFactory.CreateClient();
+
+            if (token != null && token.Length >= 1)
+            {
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
+            }
 
             HttpResponseMessage response = await client.SendAsync(request);
 
@@ -100,7 +126,7 @@ namespace ParkyWeb.Repository
             return null;
         }
 
-        public async Task<bool> UpdateAsync(string url, T objectToUpdate)
+        public async Task<bool> UpdateAsync(string url, T objectToUpdate, string token = "")
         {
             var request = new HttpRequestMessage(HttpMethod.Patch, url);
             if (objectToUpdate != null)
@@ -119,6 +145,13 @@ namespace ParkyWeb.Repository
             }
 
             var client = this._clientFactory.CreateClient();
+
+            if (token != null && token.Length >= 1)
+            {
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
+            }
+
             HttpResponseMessage response = await client.SendAsync(request);
 
             return response.StatusCode == System.Net.HttpStatusCode.NoContent ? true : false;

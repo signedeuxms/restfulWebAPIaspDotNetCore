@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 // to be able to modify the view when the application is running, refresh the page and see
 // the modification on running application
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,12 +29,37 @@ namespace ParkyWeb
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {            
+        {
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.Cookie.HttpOnly = true;
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                    options.LoginPath = "/Home/Login";
+                    options.AccessDeniedPath = "/Home/AccessDenied";
+                    options.SlidingExpiration = true;
+                });
+
+            services.AddHttpContextAccessor();
+
             services.AddScoped<INationalParkRepository, NationalParkRepository>();
             services.AddScoped<ITrailRepository, TrailRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             // to make Http calls
             services.AddHttpClient();
+
+            services.AddSession(options =>
+           {
+               // set a short timeout for easy testing
+               options.IdleTimeout = TimeSpan.FromMinutes(10);
+               options.Cookie.HttpOnly = true;
+
+               // make the session cookie essential
+               options.Cookie.IsEssential = true;
+           });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,6 +79,12 @@ namespace ParkyWeb
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseCors( use => use.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            app.UseSession();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
